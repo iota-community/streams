@@ -163,7 +163,6 @@ fn make_bundle(
     bundle_builder
         .seal()
         .map_err(|e| anyhow!("Failed to seal bundle: {:?}.", e))?
-        // TODO: `attach_remote` is not implemented in iota-bundle-preview atm.
         .attach_remote(trunk, branch)
         .map_err(|e| anyhow!("Failed to attach bundle: {:?}.", e))?
         .build()
@@ -270,7 +269,7 @@ pub fn msg_from_bundle<F>(bundle: &Bundle) -> TangleMessage<F> {
 
     let binary = BinaryMessage::new(TangleAddress { appinst, msgid }, body.into());
     // let timestamp: u64 = *(tx.timestamp() as *const iota::bundle::Timestamp) as *const u64;
-    let timestamp: u64 = unsafe { core::mem::transmute(tx.timestamp()) };
+    let timestamp: u64 = unsafe { core::mem::transmute(tx.timestamp().clone()) };
 
     TangleMessage { binary, timestamp }
 }

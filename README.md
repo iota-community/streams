@@ -67,6 +67,11 @@ Because the library is not on [crates.io](https://crates.io/), you need to use t
 `no_std` is currently supported. However cargo nightly must be used to build with `no_std` feature.
 
 ## Getting started
+
+If you don't have a rust project setup yet you can create one by running,
+
+    cargo new my-library
+
 **Remote**
 Add the following to your `Cargo.toml` file:
 
@@ -74,8 +79,6 @@ Add the following to your `Cargo.toml` file:
 [dependencies]
 anyhow = { version = "1.0", default-features = false }
 iota-streams = { git = "https://github.com/iotaledger/streams", branch  = "master"}
-iota-core = { git = "https://github.com/iotaledger/iota.rs", rev = "0ad8e7f" }
-iota-conversion = { git = "https://github.com/iotaledger/iota.rs", rev = "03cf531" }
 ```
 
 **Local**
@@ -90,7 +93,7 @@ iota-conversion = { git = "https://github.com/iotaledger/iota.rs", rev = "03cf53
 
     ```bash
     [dependencies]
-    iota-streams = { version = "0.1", path = "../streams" }
+    iota-streams = { version = "1.0.0", path = "../streams" }
     ```
 
 ## Getting started
@@ -102,14 +105,18 @@ For example, you may want to use the Channels protocol to create a new author an
 ```
 use iota_streams::app_channels::api::tangle::{Author, Subscriber};
 use iota_streams::app::transport::tangle::PAYLOAD_BYTES;
+use iota_streams::app::transport::tangle::client::Client;
 
 fn main() {
+    let node = "http://localhost:14265";
+    let client = Client::new_from_url(node);
+
     let encoding = "utf-8";
     let multi_branching_flag = true;
 
-    let mut author = Author::new("AUTHORSSEED", encoding, PAYLOAD_BYTES, multi_branching_flag);
+    let mut author = Author::new("AUTHORSSEED", encoding, PAYLOAD_BYTES, multi_branching_flag, client);
     
-    let mut subscriber = Subscriber::new("MYSUBSCRIBERSECRETSTRING", encoding, PAYLOAD_BYTES);
+    let mut subscriber = Subscriber::new("MYSUBSCRIBERSECRETSTRING", encoding, PAYLOAD_BYTES, client);
 }
 ```
 
