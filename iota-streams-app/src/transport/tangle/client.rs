@@ -10,8 +10,6 @@ use core::{
         TryInto,
     },
 };
-#[cfg(not(feature = "async"))]
-use smol::block_on;
 
 use iota::{
     client as iota_client,
@@ -40,7 +38,7 @@ use crate::{
         *,
     },
 };
-
+use futures::executor::block_on;
 const TRYTE_CHARS: &str = "9ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 fn pad_tritbuf(
